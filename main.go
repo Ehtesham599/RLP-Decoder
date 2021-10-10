@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"reflect"
+	"rlp-decoder/decode"
 )
 
 /*
@@ -28,12 +29,12 @@ func main() {
 	interceptedMessage := os.Args[1:][0]
 
 	//check if its a valid hex string
-	if !decode.isValidHexString(interceptedMessage) {
+	if !decode.IsValidHexString(interceptedMessage) {
 		panic("Not a valid hex string")
 	}
 
 	//decode retrieved string to byte slice
-	decodedBytes := decode.strToByteSlice(interceptedMessage)
+	decodedBytes := decode.StrToByteSlice(interceptedMessage)
 
 	// iterate through byte slice
 	for i := 0; i < len(decodedBytes); i++ {

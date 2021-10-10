@@ -1,6 +1,9 @@
 package decode
 
-import "encoding/hex"
+import (
+	"encoding/hex"
+	"fmt"
+)
 
 const plainString = "plain_string"
 const shortString = "type_short_string"
@@ -8,11 +11,15 @@ const longString = "type_long_string"
 const shortList = "type_short_list"
 const longList = "type_long_list"
 
-func isValidHexString(str string) bool {
+func init() {
+	fmt.Println("Initializing decoder package...")
+}
+
+func IsValidHexString(str string) bool {
 	return len(str)%2 == 0
 }
 
-func strToByteSlice(str string) []byte {
+func StrToByteSlice(str string) []byte {
 	data, err := hex.DecodeString(str)
 	if err != nil {
 		panic(err)
@@ -20,7 +27,7 @@ func strToByteSlice(str string) []byte {
 	return data
 }
 
-func getType(val uint8) string {
+func GetType(val uint8) string {
 	if val > 0 && val <= 127 {
 		return plainString
 	} else if val >= 128 && val <= 183 {
