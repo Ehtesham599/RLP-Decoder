@@ -5,11 +5,11 @@ import (
 	"fmt"
 )
 
-const plainString = "plain_string"
-const shortString = "type_short_string"
-const longString = "type_long_string"
-const shortList = "type_short_list"
-const longList = "type_long_list"
+const PLAIN_STRING = "plain_string"
+const SHORT_STRING = "type_short_string"
+const LONG_STRING = "type_long_string"
+const SHORT_LIST = "type_short_list"
+const LONG_LIST = "type_long_list"
 
 func init() {
 	fmt.Println("Initializing decoder package...")
@@ -29,15 +29,15 @@ func StrToByteSlice(str string) []byte {
 
 func GetType(val uint8) string {
 	if val > 0 && val <= 127 {
-		return plainString
+		return PLAIN_STRING
 	} else if val >= 128 && val <= 183 {
-		return shortString
+		return SHORT_STRING
 	} else if val >= 184 && val <= 191 {
-		return longString
+		return LONG_STRING
 	} else if val >= 192 && val <= 247 {
-		return shortList
+		return SHORT_LIST
 	} else if val >= 248 && val <= 255 {
-		return longList
+		return LONG_LIST
 	}
 
 	return "Invalid byte!"
