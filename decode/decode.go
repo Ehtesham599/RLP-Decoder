@@ -49,7 +49,9 @@ func GetType(val uint8) string {
 	return "Invalid input!"
 }
 
-func Decode(data []uint8) {
+func Decode(data []uint8) (string, []string) {
+
+	var decodedList []string
 	var decodedMessage string
 	for i := 0; i < len(data); i++ {
 		switch byte_type := GetType(data[i]); byte_type {
@@ -57,10 +59,37 @@ func Decode(data []uint8) {
 		case PLAIN_STRING:
 			// decode string directly as it is
 			decodedMessage += string(data[i])
-		// case SHORT_STRING:
+		case SHORT_STRING:
 			//Get length of string
-			
+			l := data[i] - SHORT_STRING_SLICE[0]
+			res, _ := Decode(data[i+1 : i+int(l+1)])
+			decodedMessage += res + " "
+			decodedList = append(decodedList, decodedMessage)
+			i += int(l + 1)
+		case LONG_STRING:
+			//Get length of string
+			l := data[i] - LONG_STRING_SLICE[0]
+			res, _ := Decode(data[i+1 : i+int(l+1)])
+			decodedMessage += res + " "
+			decodedList = append(decodedList, decodedMessage)
+			i += int(l + 1)
+		case SHORT_LIST:
+			//Get length list
+			l := data[i] - SHORT_LIST_SLICE[0]
+			res, _ := Decode(data[i+1 : i+int(l+1)])
+			decodedMessage += res
+			decodedList = append(decodedList, res)
+			i += int(l + 1)
+		case LONG_LIST:
+			//Get length list
+			l := data[i] - LONG_LIST_SLICE[0]
+			res, _ := Decode(data[i+1 : i+int(l+1)])
+			decodedMessage += res
+			decodedList = append(decodedList, res)
+			i += int(l + 1)
+		default:
+			decodedMessage += ""
 		}
-
 	}
+	return decodedMessage, decodedList
 }

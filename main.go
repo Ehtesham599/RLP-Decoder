@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"reflect"
 	"rlp-decoder/decode"
 )
 
@@ -23,8 +22,13 @@ func main() {
 	decodedBytes := decode.StrToByteSlice(interceptedMessage)
 
 	// iterate through byte slice
-	for i := 0; i < len(decodedBytes); i++ {
-		fmt.Println(decodedBytes[i], reflect.TypeOf(decodedBytes[i]), string(decodedBytes[i]), decode.GetType(decodedBytes[i]))
+	// for i := 0; i < len(decodedBytes); i++ {
+	// 	fmt.Println(decodedBytes[i], reflect.TypeOf(decodedBytes[i]), string(decodedBytes[i]), decode.GetType(decodedBytes[i]))
+	// }
+	resString, resList := decode.Decode(decodedBytes)
+	if resString != "" && len(resList) == 0 {
+		fmt.Println(resString)
+	} else if len(resList) > 0 {
+		fmt.Println(resList)
 	}
-
 }
