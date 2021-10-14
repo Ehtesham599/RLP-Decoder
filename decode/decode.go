@@ -66,7 +66,7 @@ func Decode(data []uint8) (string, []string) {
 		switch input_type := GetType(data[i]); input_type {
 		//Base case
 		case PLAIN_STRING:
-			// decode string directly as it is
+			// decipher string directly as it is
 			decodedMessage += string(data[i])
 
 		case SHORT_STRING:
@@ -76,9 +76,11 @@ func Decode(data []uint8) (string, []string) {
 			// pass values ranging in the indexes obtained from length recursivley
 			res, _ := Decode(data[i+1 : i+int(l+1)])
 
+			// Append deciphered message
 			decodedMessage += "\n" + res + "\n"
 			decodedList = append(decodedList, decodedMessage)
-			// increment index to after list type
+
+			// increment index to after current type
 			i += int(l + 1)
 
 		case LONG_STRING:
@@ -88,10 +90,11 @@ func Decode(data []uint8) (string, []string) {
 			// pass values ranging in the indexes obtained from length recursivley
 			res, _ := Decode(data[i+1 : i+int(l+1)])
 
+			// Append deciphered message
 			decodedMessage += "\n" + res + "\n"
 			decodedList = append(decodedList, decodedMessage)
 
-			// increment index to after list type
+			// increment index to after current type
 			i += int(l + 1)
 
 		case SHORT_LIST:
@@ -101,10 +104,11 @@ func Decode(data []uint8) (string, []string) {
 			// pass values ranging in the indexes obtained from length recursivley
 			res, _ := Decode(data[i+1 : i+int(l+1)])
 
+			// Append deciphered message
 			decodedMessage += res
 			decodedList = append(decodedList, res)
 
-			// increment index to after list type
+			// increment index to after current type
 			i += int(l + 1)
 
 		case LONG_LIST:
@@ -114,10 +118,11 @@ func Decode(data []uint8) (string, []string) {
 			// pass values ranging in the indexes obtained from length recursivley
 			res, _ := Decode(data[i+1 : i+int(l+1)])
 
+			// Append deciphered message
 			decodedMessage += res
 			decodedList = append(decodedList, res)
 
-			// increment index to after list type
+			// increment index to after current type
 			i += int(l + 1)
 
 		case INVALID_TYPE:
