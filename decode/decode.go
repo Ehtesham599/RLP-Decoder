@@ -2,6 +2,8 @@ package decode
 
 import (
 	"encoding/hex"
+	"fmt"
+	"os"
 )
 
 const (
@@ -10,9 +12,10 @@ const (
 	LONG_STRING  = "type long string"
 	SHORT_LIST   = "type short list"
 	LONG_LIST    = "type long list"
-	INVALID_BYTE = "invalid byte"
+	INVALID_TYPE = "invalid type"
 )
 
+// Range that follows the rule to decipher rlp encoded messages
 var (
 	PLAIN_STRING_SLICE = []uint8{0, 127}
 	SHORT_STRING_SLICE = []uint8{128, 183}
@@ -21,10 +24,12 @@ var (
 	LONG_LIST_SLICE    = []uint8{248, 255}
 )
 
+// Check if input hex string is valid
 func IsValidHexString(str string) bool {
 	return len(str)%2 == 0
 }
 
+// decode string to hex
 func StrToByteSlice(str string) []byte {
 	data, err := hex.DecodeString(str)
 	if err != nil {
@@ -33,6 +38,7 @@ func StrToByteSlice(str string) []byte {
 	return data
 }
 
+// Check range of decoded and return its type
 func GetType(val uint8) string {
 	if val > PLAIN_STRING_SLICE[0] && val <= PLAIN_STRING_SLICE[1] {
 		return PLAIN_STRING
@@ -46,49 +52,77 @@ func GetType(val uint8) string {
 		return LONG_LIST
 	}
 
-	return "Invalid input!"
+	return INVALID_TYPE
 }
 
+// Decodes uint8 slice recursively by following the recursive length prefix method
 func Decode(data []uint8) (string, []string) {
 
 	var decodedList []string
 	var decodedMessage string
+
 	for i := 0; i < len(data); i++ {
-		switch byte_type := GetType(data[i]); byte_type {
+
+		switch input_type := GetType(data[i]); input_type {
 		//Base case
 		case PLAIN_STRING:
 			// decode string directly as it is
 			decodedMessage += string(data[i])
+
 		case SHORT_STRING:
 			//Get length of string
 			l := data[i] - SHORT_STRING_SLICE[0]
+
+			// pass values ranging in the indexes obtained from length recursivley
 			res, _ := Decode(data[i+1 : i+int(l+1)])
-			decodedMessage += res + " "
+
+			decodedMessage += "\n" + res + "\n"
 			decodedList = append(decodedList, decodedMessage)
+			// increment index to after list type
 			i += int(l + 1)
+
 		case LONG_STRING:
 			//Get length of string
 			l := data[i] - LONG_STRING_SLICE[0]
+
+			// pass values ranging in the indexes obtained from length recursivley
 			res, _ := Decode(data[i+1 : i+int(l+1)])
-			decodedMessage += res + " "
+
+			decodedMessage += "\n" + res + "\n"
 			decodedList = append(decodedList, decodedMessage)
+
+			// increment index to after list type
 			i += int(l + 1)
+
 		case SHORT_LIST:
-			//Get length list
+			//Get length of list
 			l := data[i] - SHORT_LIST_SLICE[0]
+
+			// pass values ranging in the indexes obtained from length recursivley
 			res, _ := Decode(data[i+1 : i+int(l+1)])
+
 			decodedMessage += res
 			decodedList = append(decodedList, res)
+
+			// increment index to after list type
 			i += int(l + 1)
+
 		case LONG_LIST:
-			//Get length list
+			//Get length of list
 			l := data[i] - LONG_LIST_SLICE[0]
+
+			// pass values ranging in the indexes obtained from length recursivley
 			res, _ := Decode(data[i+1 : i+int(l+1)])
+
 			decodedMessage += res
 			decodedList = append(decodedList, res)
+
+			// increment index to after list type
 			i += int(l + 1)
-		default:
-			decodedMessage += ""
+
+		case INVALID_TYPE:
+			fmt.Println("Invalid RLP code!")
+			os.Exit(1)
 		}
 	}
 	return decodedMessage, decodedList

@@ -8,8 +8,6 @@ import (
 
 func main() {
 
-	defer os.Exit(0)
-
 	// retrieve string from args
 	interceptedMessage := os.Args[1:][0]
 
@@ -21,14 +19,16 @@ func main() {
 	//decode retrieved string to byte slice
 	decodedBytes := decode.StrToByteSlice(interceptedMessage)
 
-	// iterate through byte slice
-	// for i := 0; i < len(decodedBytes); i++ {
-	// 	fmt.Println(decodedBytes[i], reflect.TypeOf(decodedBytes[i]), string(decodedBytes[i]), decode.GetType(decodedBytes[i]))
-	// }
-	resString, resList := decode.Decode(decodedBytes)
-	if resString != "" && len(resList) == 0 {
-		fmt.Println(resString)
-	} else if len(resList) > 0 {
-		fmt.Println(resList)
+	// Get rlp decoded plain text, both as string and slice
+	resultString, resultList := decode.Decode(decodedBytes)
+
+	if resultString != "" && len(resultList) == 0 {
+		// If decoded data is a list
+		fmt.Println(resultString)
+	} else if len(resultList) > 0 {
+		// If decoded data is a string
+		fmt.Println(resultList)
+	} else if resultString == "" {
+		fmt.Println("Invalid RLP code!")
 	}
 }
