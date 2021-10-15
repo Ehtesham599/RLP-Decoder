@@ -27,12 +27,12 @@ func main() {
 	resultString, resultList := decode.Decode(decodedBytes)
 
 	if resultString != "" && len(resultList) == 0 {
-		// If decoded data is a list
+		// If decoded data is a string
 		fmt.Println(resultString)
 	} else if len(resultList) > 0 {
-		// If decoded data is a string
+		// If decoded data is a list
 		fmt.Println(resultList)
 	} else if resultString == "" {
-		fmt.Println("Invalid RLP code!")
+		fmt.Println("could not decode message")
 	}
 }
