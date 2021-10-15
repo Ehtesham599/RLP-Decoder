@@ -26,7 +26,11 @@ var (
 
 // Check if input hex string is valid
 func IsValidHexString(str string) bool {
-	return len(str)%2 == 0
+	if str != "" {
+		return len(str)%2 == 0
+	}
+
+	return false
 }
 
 // decode string to hex

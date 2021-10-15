@@ -8,8 +8,12 @@ import (
 
 func main() {
 
+	if len(os.Args) <= 1 {
+		panic("Please provide an rlp encoded message as an argument")
+	}
+
 	// retrieve string from args
-	interceptedMessage := os.Args[1:][0]
+	interceptedMessage := os.Args[1]
 
 	//check if its a valid hex string
 	if !decode.IsValidHexString(interceptedMessage) {
