@@ -22,11 +22,11 @@ const (
 
 // Range that follows the rule to decipher rlp encoded messages
 var (
-	plainStringType = DataType{0, 127}
-	shortStringType = DataType{128, 183}
-	longStringType  = DataType{184, 191}
-	shortListType   = DataType{192, 247}
-	longListType    = DataType{248, 255}
+	plainStringType = DataType{Start: 0, End: 127}
+	shortStringType = DataType{Start: 128, End: 183}
+	longStringType  = DataType{Start: 184, End: 191}
+	shortListType   = DataType{Start: 192, End: 247}
+	longListType    = DataType{Start: 248, End: 255}
 )
 
 // Check if input hex string is valid
