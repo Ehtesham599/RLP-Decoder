@@ -2,6 +2,7 @@
 > An implementation of Recursive Length Prefix Decoder in Golang.
 
 ### RLP decoding
+
 Ethereum uses Recursive Length Prefix to serialize/deserialize data.
 
 RLP decoding has a specified byte range set in order to decipher endcoded data.
@@ -19,4 +20,5 @@ Recursive length prefix decoding involves the following steps:
 5. Parse until end of string
 
 ### Execution
+
 To run the application, run `go run main.go <RLP_ENCODED_MESSAGE>`, passing a valid RLP encoded message as an argument. 
